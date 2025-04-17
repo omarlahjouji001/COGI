@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat avec Cogi{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="chat-header glass-card mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2>Bienvenue, <span class="rainbow-text">{{ username }}</span></h2>
+        <p class="text-muted mb-0">Votre compagnon de santé mentale est à votre écoute</p>
+      </div>
+      <a href="/logout" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-box-arrow-right"></i> Se déconnecter
+      </a>
+    </div>
+  </div>
+  
+  <div class="chat-container">
+    <!-- Zone d'affichage des messages -->
+    <div id="chat-box" class="chat-box">
+      <!-- Message de bienvenue initial -->
+      <div class="chat-message bot-message fade-in">
+        <div class="message-avatar">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-sender">Cogi</div>
+          <div class="message-text">Bonjour {{ username }}! Comment puis-je vous aider aujourd'hui ? Je suis là pour discuter de ce qui vous préoccupe.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Champ de saisie de message -->
+    <div class="chat-input glass-card">
+      <form id="message-form" class="input-group">
+        <input type="text" id="user-input" class="form-control" placeholder="Écrivez votre message ici..." autocomplete="off">
+        <button type="submit" id="send-btn" class="btn btn-love">
+          <i class="bi bi-send-fill"></i> Envoyer
+        </button>
+      </form>
+      <div class="chat-suggestions mt-3">
+        <span class="tag tag-love suggestionBtn">Je me sens anxieux</span>
+        <span class="tag tag-peace suggestionBtn">Techniques de respiration</span>
+        <span class="tag tag-harmony suggestionBtn">Comment améliorer mon humeur ?</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fonction d'envoi du message
+  function sendMessage(message = null) {
+    const input = document.getElementById("user-input");
+    const userMessage = message || input.value.trim();
+    
+    if (userMessage === "") return; // Empêche l'envoi d'un message vide
+
+    // Ajoute le message de l'utilisateur à l'interface
+    appendMessage("Vous", userMessage, true);
+    input.value = ""; // Réinitialise le champ de texte
+
+    // Affiche un indicateur de frappe
+    const typingIndicator = document.createElement("div");
+    typingIndicator.id = "typing-indicator";
+    typingIndicator.classList.add("chat-message", "bot-message", "fade-in");
+    typingIndicator.innerHTML = `
+      <div class="message-avatar">
+        <i class="bi bi-robot"></i>
+      </div>
+      <div class="message-content">
+        <div class="message-sender">Cogi</div>
+        <div class="message-text typing-animation">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    `;
+    document.getElementById("chat-box").appendChild(typingIndicator);
+    scrollToBottom();
+
+    // Envoi du message au serveur avec JSON
+    fetch("/send_message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ 
+        message: userMessage,
+        system_message: "Tu es un assistant de soutien psychologique nommé Cogi. Reste calme, humain et à l'écoute."
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erreur réseau: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Supprime l'indicateur de frappe
+      const indicator = document.getElementById("typing-indicator");
+      if (indicator) indicator.remove();
+      
+      // Vérifie si la réponse contient une erreur
+      if (data.status === "error") {
+        appendMessage("Cogi", "Désolé, une erreur est survenue: " + data.error, false);
+      } else {
+        // Ajoute la réponse du bot
+        appendMessage("Cogi", data.response, false);
+      }
+    })
+    .catch(error => {
+      console.error("Erreur:", error);
+      // Supprime l'indicateur de frappe
+      const indicator = document.getElementById("typing-indicator");
+      if (indicator) indicator.remove();
+      
+      // Message d'erreur
+      appendMessage("Cogi", "Désolé, une erreur est survenue lors de la communication avec le serveur. Veuillez réessayer.", false);
+    });
+  }
+
+  // Fonction pour ajouter un message dans le chat
+  function appendMessage(sender, message, isUser) {
+    const chatBox = document.getElementById("chat-box");
+    const msg = document.createElement("div");
+    msg.classList.add("chat-message", "fade-in");
+    
+    // Ajoute la classe appropriée selon l'expéditeur
+    if (isUser) {
+      msg.classList.add("user-message");
+      msg.innerHTML = `
+        <div class="message-content">
+          <div class="message-sender">${sender}</div>
+          <div class="message-text">${message}</div>
+        </div>
+        <div class="message-avatar">
+          <i class="bi bi-person"></i>
+        </div>
+      `;
+    } else {
+      msg.classList.add("bot-message");
+      msg.innerHTML = `
+        <div class="message-avatar">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-sender">${sender}</div>
+          <div class="message-text">${message}</div>
+        </div>
+      `;
+    }
+    
+    chatBox.appendChild(msg);
+    scrollToBottom();
+  }
+
+  // Fonction pour faire défiler automatiquement vers le bas
+  function scrollToBottom() {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Événement d'envoi avec le bouton
+  document.getElementById("message-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendMessage();
+  });
+
+  // Événement pour les suggestions de messages
+  document.querySelectorAll(".suggestionBtn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      sendMessage(this.textContent);
+    });
+  });
+
+  // Mettre le focus sur le champ de saisie au chargement
+  window.onload = function() {
+    document.getElementById("user-input").focus();
+  };
+</script>
+{% endblock %}

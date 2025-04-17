@@ -1,0 +1,33 @@
+{
+  "user": {
+    "password": "pbkdf2:sha256:260000$abc123$...",
+    "attempts": 0
+  },
+  "emyelyassine2020@gmail.com": {
+    "first_name": "hfgs",
+    "last_name": "effsfdf",
+    "email": "emyelyassine2020@gmail.com",
+    "password": "scrypt:32768:8:1$WmZeSmhdZ74xFJxv$525a3281c9a6926f28e72c331bf5d8400ec70654563c485d4278b61a46469658cddd380c0d0bd3289ad59b533714f23b89811fa9c88ad6fc6a9ab80c17d7c11f",
+    "gender": "other",
+    "dob": "2001-02-12",
+    "attempts": 0
+  },
+  "elyassiniman2017@gmail.com": {
+    "first_name": "holaa",
+    "last_name": "heyyyy",
+    "email": "elyassiniman2017@gmail.com",
+    "password": "scrypt:32768:8:1$lrVUoXKxHwxlsMYq$7954cfa1ac6afd829461ae56110dbdc2e9ee80d0b8be6223692ec8c2e8d77610ad68e2973a17e0b64263878193da5a583d5c08b4e30fc3be8034ff0f484c5790",
+    "gender": "female",
+    "dob": "2004-03-12",
+    "attempts": 0
+  },
+  "test@gmail.com": {
+    "first_name": "test",
+    "last_name": "test",
+    "email": "test@gmail.com",
+    "password": "scrypt:32768:8:1$uHtapbZ13rkqWXVq$186f211155685218545627655821f01393ec7bb8de5ea2698a8751d11e78bae2265460982c2360e0a910aedf2ac6d18fc64c047dfe238617d52a3dca1df98e0d",
+    "gender": "female",
+    "dob": "2004-03-12",
+    "attempts": 0
+  }
+}

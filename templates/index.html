@@ -1,0 +1,141 @@
+<!-- Index Page (Accueil) -->
+{% extends 'base.html' %}
+{% block title %}Cogi - Your Mental Health Companion{% endblock %}
+{% block content %}
+
+<!-- Hero Section with Animation - Seamless with Header -->
+<div class="hero no-margin-top">
+  <div class="content">
+    <h1>Welcome to <span class="rainbow-text">Cogi</span></h1>
+    <p>Your mental health companion, available 24/7. Talk to Cogi whenever you need a safe space for your thoughts and feelings.</p>
+    <div class="hero-buttons">
+      <a href="/chat" class="btn btn-lg">Start Chatting Now</a>
+      <a href="/about" class="btn btn-peace">Learn More</a>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+  <h2 class="love-title">How Cogi Helps You</h2>
+  <div class="features">
+    <div class="feature love-feature">
+      <i class="fa fa-heart"></i>
+      <h3>Emotional Support</h3>
+      <p>Cogi provides a judgment-free space where you can express your feelings and receive compassionate support at any time.</p>
+    </div>
+    <div class="feature peace-feature">
+      <i class="fa fa-brain"></i>
+      <h3>Mindfulness Practices</h3>
+      <p>Access guided meditation, breathing exercises, and mindfulness techniques to help calm your mind and reduce anxiety.</p>
+    </div>
+    <div class="feature">
+      <i class="fa fa-comments"></i>
+      <h3>Meaningful Conversations</h3>
+      <p>Have meaningful dialogue about your thoughts and feelings with an AI trained to understand mental health concerns.</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Stats Section -->
+<div class="container">
+  
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="stat-card love-stat">
+        <div class="stat-number">24/7</div>
+        <div class="stat-title">Always Available Support</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card harmony-stat">
+        <div class="stat-number">10,000+</div>
+        <div class="stat-title">Supported Users</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card peace-stat">
+        <div class="stat-number">100+</div>
+        <div class="stat-title">Mindfulness Resources</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Get Started Section -->
+<div class="harmony-section">
+  <div class="container">
+    <h2 class="harmony-title">Start Your Journey Today</h2>
+    <div class="harmony-content">
+      <p>Take the first step toward better mental well-being. Cogi is here for you whenever you need someone to talk to, a guided meditation, or just a moment of calm.</p>
+      <p>No appointments, no waiting rooms. Just immediate support at your fingertips.</p>
+      <a href="/chat" class="btn btn-love btn-lg heartbeat">Chat with Cogi Now</a>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- FAQ Section -->
+<div class="container mb-5">
+  <h2 class="peace-title">Frequently Asked Questions</h2>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Is Cogi a replacement for therapy?</h5>
+          <p class="card-text">No, Cogi is designed to be a supportive companion but does not replace professional mental health care. We encourage users to seek professional help when needed.</p>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Is my conversation with Cogi private?</h5>
+          <p class="card-text">Yes, your privacy is our priority. All conversations are encrypted and confidential. Read our privacy policy to learn more about how we protect your data.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">How much does Cogi cost?</h5>
+          <p class="card-text">We offer both free and premium plans. The basic features are always free, while our premium plan offers additional resources and features for a monthly subscription.</p>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Can I use Cogi on my phone?</h5>
+          <p class="card-text">Yes, Cogi is available on web, iOS, and Android platforms, so you can access support wherever you are.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Newsletter Signup -->
+<div class="container mb-5">
+  <div class="card-rainbow">
+    <div class="card-rainbow-content">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h3>Stay Connected</h3>
+          <p class="mb-0">Join our newsletter to receive mental wellness tips, updates about Cogi, and helpful resources.</p>
+        </div>
+        <div class="col-lg-6">
+          <form class="d-flex gap-2 flex-column flex-sm-row">
+            <div class="flex-grow-1">
+              <input type="email" class="form-control" placeholder="Your email address">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-love w-100">Subscribe</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
