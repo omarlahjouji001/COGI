@@ -226,6 +226,28 @@ a:hover {
   overflow: hidden;
 }
 
+.chat-container {
+  /* Layout & Structure */
+  max-width: 900px;
+  margin: 50px auto 0 auto; /* 50px top margin */
+  display: flex;
+  flex-direction: column;
+  height: calc(80vh - 100px);
+  min-height: 500px;
+  position: relative;
+  
+  /* Visual Styling */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  
+  /* Spacing */
+  padding: 10px;
+  
+}
 .navbar-nav .nav-link::before {
   content: '';
   position: absolute;
@@ -429,7 +451,6 @@ a:hover {
   line-height: 1.8;
 }
 
-/* Heart beat glow animation */
 @keyframes glow {
   0% { text-shadow: 0 0 5px rgba(255, 126, 185, 0.1); }
   50% { text-shadow: 0 0 20px rgba(255, 126, 185, 0.3), 0 0 30px rgba(157, 148, 255, 0.1); }
@@ -602,7 +623,7 @@ a:hover {
 /* Chat Container */
 .chat-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 50px auto 0 auto; /* ✅ Ajoute 50px de marge en haut */
   display: flex;
   flex-direction: column;
   height: calc(80vh - 100px);
@@ -612,6 +633,7 @@ a:hover {
   overflow: hidden;
   box-shadow: var(--soft-shadow);
 }
+
 
 /* Chat Header */
 .chat-header {
@@ -1372,11 +1394,11 @@ a:hover {
 
 .alert-danger {
   background-color: rgba(255, 245, 245, 0.9);
-  color: #e05252;
+  color: #52e078;
 }
 
 .alert-danger::before {
-  background: linear-gradient(to bottom, #ff7eb9, #ff517b);
+  background: linear-gradient(to bottom, #1cda6b, #51ff9f);
 }
 
 .alert-success {
@@ -3062,3 +3084,252 @@ footer p {
     color: #999 !important;
   }
 }
+/* Styles pour le formulaire de feedback */
+.feedback-form {
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+/* Titre du formulaire */
+.feedback-form h3,
+.feedback-form h2 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--harmony-purple, #9d94ff);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Description sous le titre */
+.feedback-description {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  color: var(--text-medium, #7a82ab);
+}
+
+/* Style pour les labels */
+.feedback-form label {
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-dark, #444a7c);
+}
+
+/* Style pour les champs de saisie */
+.feedback-form input[type="text"],
+.feedback-form input[type="email"],
+.feedback-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #e0e0ff;
+  font-size: 1rem;
+  background: #fdfdfd;
+  margin-bottom: 20px;
+  height: 45px;
+}
+
+.feedback-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Style pour le bouton */
+.feedback-form button {
+  background: linear-gradient(to right, #7ceca9, #7ec8e3);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(126, 200, 227, 0.3);
+}
+
+.feedback-form button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(126, 200, 227, 0.4);
+}
+
+.feedback-form button i {
+  margin-right: 8px;
+}
+
+/* Focus states */
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+  outline: none;
+  border-color: var(--harmony-purple, #9d94ff);
+  box-shadow: 0 0 0 3px rgba(157, 148, 255, 0.1);
+}
+
+/* Styles pour les témoignages */
+.testimonials {
+  background: var(--light-bg);
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  background: var(--harmony-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.testimonial-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.testimonial {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 20px;
+  max-width: 300px;
+  box-shadow: var(--soft-shadow);
+  transition: var(--soft-transition);
+}
+
+.testimonial:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+}
+
+.testimonial-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
+
+.testimonial-message {
+  font-size: 1rem;
+  color: var(--text-medium);
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.testimonial-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Styles spécifiques pour le formulaire de connexion */
+.containerlogin .input-group {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.containerlogin .input-group-text {
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 15px !important;
+}
+      
+.containerlogin .form-control {
+  height: 60px !important;
+  padding: 10px 15px !important;
+  font-size: 16px !important;
+}
+      
+.containerlogin .btn {
+  height: 60px !important;
+  font-size: 16px !important;
+  padding: 10px 20px !important;
+}
+      
+.containerlogin .form-label {
+  font-size: 16px !important;
+  margin-bottom: 10px !important;
+}
+.custom-navbar {
+  height: 1.5cm; /* Fixe la hauteur à 1.5 cm */
+  min-height: 1.5cm;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link,
+.custom-navbar .btn {
+  font-size: 0.9rem; /* Réduit légèrement la taille du texte */
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.custom-navbar .btn {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.2;
+}
+/* Reduce text size in navigation */
+.navbar .nav-link {
+  font-size: 1rem; /* Very small text size */
+  text-transform: uppercase; /* Optional: uppercase for better readability */
+  letter-spacing: 0.3rem; /* Optional: letter spacing */
+}
+
+/* Adjust logo size if needed */
+.navbar .navbar-brand {
+  font-size: 1.75rem;
+}
+
+/* Adjust login/logout buttons */
+.navbar .btn {
+  font-size: 1.05rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Centered navigation container */
+.nav-center-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Navigation links container */
+.nav-links {
+  display: flex;
+  gap: 30px; /* Adjust spacing between links */
+}
+
+/* Navigation link styling */
+.nav-link {
+  padding: 8px 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border-radius: 20px; /* Creates pill-shaped buttons */
+}
+
+/* Optional: Hover effect for nav links */
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+

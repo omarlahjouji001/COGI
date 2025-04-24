@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Inscription - Cogi{% endblock %}
+{% block title %}Sign Up - Cogi{% endblock %}
 
 {% block content %}
 <div class="container">
   <div class="form-container fade-in">
     <div class="text-center mb-4">
-      <img  alt="Cogi Logo" height="60" class="mb-3" onerror="this.style.display='none'">
-      <h2>Inscription</h2>
-      <p class="text-muted">Créez un compte pour commencer à discuter avec Cogi.</p>
+      <img alt="Cogi Logo" height="60" class="mb-3" onerror="this.style.display='none'">
+      <h2>Sign Up</h2>
+      <p class="text-muted">Create an account to start chatting with Cogi.</p>
     </div>
     
-    <!-- Affichage des messages d'erreur -->
+    <!-- Display error messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="alert alert-danger" role="alert">
@@ -24,18 +24,18 @@
     
     <form method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
-        <label for="first_name" class="form-label">Prénom</label>
+        <label for="first_name" class="form-label">First Name</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Votre prénom" required>
+          <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Your first name" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="last_name" class="form-label">Nom</label>
+        <label for="last_name" class="form-label">Last Name</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Votre nom" required>
+          <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Your last name" required>
         </div>
       </div>
 
@@ -43,30 +43,30 @@
         <label for="email" class="form-label">Email</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Votre adresse email" required>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Your email address" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
+        <label for="password" class="form-label">Password</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Mot de passe" required>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="gender" class="form-label">Sexe</label>
+        <label for="gender" class="form-label">Gender</label>
         <select id="gender" name="gender" class="form-select" required>
-          <option value="" disabled selected>Choisissez votre sexe</option>
-          <option value="male">Homme</option>
-          <option value="female">Femme</option>
-          <option value="other">Autre</option>
+          <option value="" disabled selected>Select your gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
         </select>
       </div>
 
       <div class="mb-3">
-        <label for="dob" class="form-label">Date de naissance</label>
+        <label for="dob" class="form-label">Date of Birth</label>
         <input type="date" id="dob" name="dob" class="form-control" required>
       </div>
 
@@ -76,18 +76,18 @@
       </div>
 
       <button type="submit" class="btn btn-success w-100 py-2">
-        <i class="bi bi-box-arrow-in-right"></i> S'inscrire
+        <i class="bi bi-box-arrow-in-right"></i> Sign Up
       </button>
     </form>
 
     <div class="text-center mt-4">
-      <a href="/login" class="text-decoration-none">Déjà un compte ? Connectez-vous</a>
+      <a href="/login" class="text-decoration-none">Already have an account? Log in</a>
     </div>
   </div>
 </div>
 
 <script>
-  // Validation du formulaire
+  // Form validation
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     form.addEventListener('submit', function(event) {

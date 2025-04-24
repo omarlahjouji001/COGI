@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Cogi - Votre compagnon de santé mentale{% endblock %}</title>
-    <meta name="description" content="Cogi est votre compagnon de santé mentale, offrant un soutien dès que vous avez besoin de parler à quelqu'un, 24/7, dans un environnement sûr et confidentiel." />
+    <title>{% block title %}Cogi - Your Mental Health Companion{% endblock %}</title>
+    <meta name="description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
     <meta name="author" content="Cogi" />
-    <meta property="og:title" content="Cogi - Votre compagnon de santé mentale" />
-    <meta property="og:description" content="Cogi est votre compagnon de santé mentale, offrant un soutien dès que vous avez besoin de parler à quelqu'un, 24/7, dans un environnement sûr et confidentiel." />
+    <meta property="og:title" content="Cogi - Your Mental Health Companion" />
+    <meta property="og:description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -24,38 +24,43 @@
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <body>
-    <!-- Navigation Menu -->
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-          Cogi
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Accueil</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/mission">Mission</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/chat">Discuter</a>
-            </li>
-          </ul>
-          <div class="d-flex">
-            {% if session.get('user') %}
-              <span class="navbar-text me-3 text-white">Bonjour, {{ session.get('user') }} !</span>
-              <a href="/logout" class="btn btn-outline-light btn-sm">Déconnexion</a>
-            {% else %}
-              <a href="/login" class="btn btn-outline-light">Connexion</a>
-            {% endif %}
-          </div>
-        </div>
+ <!-- Navigation Menu -->
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <a class="navbar-brand" href="/">
+        Cogi
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav gap-4">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/mission">Mission</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/chat">Chat</a>
+          </li>
+        </ul>
       </div>
-    </nav>
+      <div class="d-flex align-items-center">
+        {% if session.get('user') %}
+          <div class="btn btn-light me-3 rounded-pill" style="cursor: default; background-color: transparent; border: 1px solid #FFFFFF; color: #5e5b5b;">
+            <i class="bi bi-person-circle me-2"></i>
+            {% if first_name and last_name %}{{ first_name }} {{ last_name }}{% else %}{{ session.get('user').split('@')[0] }}{% endif %}
+          </div>
+          <a href="/logout" class="btn btn-outline-light rounded-pill">Log out</a>
+        {% else %}
+          <a href="/login" class="btn btn-outline-light">Log in</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
     
     <main>
       {% block content %}{% endblock %}
@@ -63,7 +68,7 @@
     
     <footer class="bg-dark text-white text-center py-3">
       <div class="container">
-        <p>&copy; 2025 Cogi - Votre compagnon de santé mentale</p>
+        <p>&copy; 2025 Cogi - Your Mental Health Companion</p>
       </div>
     </footer>
     

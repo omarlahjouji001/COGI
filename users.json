@@ -29,5 +29,41 @@
     "gender": "female",
     "dob": "2004-03-12",
     "attempts": 0
+  },
+  "a@gmail.com": {
+    "first_name": "a",
+    "last_name": "b",
+    "email": "a@gmail.com",
+    "password": "scrypt:32768:8:1$yaodpBoFOEbahdek$7c2381e32ecb4681dce5f1bc998b435113ed90b5b3f3c74ce483dd9f59a25b7312a300fe499e8f81b916897be57b46a9f808ca40bcd3172cb53a75fa4987e595",
+    "gender": "male",
+    "dob": "2001-02-20",
+    "attempts": 0
+  },
+  "b@gmail.com": {
+    "first_name": "b",
+    "last_name": "b",
+    "email": "b@gmail.com",
+    "password": "scrypt:32768:8:1$gmwo79OTFBGOsOm6$46440a269424ab31705fc2d2ff02de9cf81f95e82cff4048df4372def7b7ad86b4f096bb55e785a7dff681261cb6b52ac284cfd5b557d164df3824ccaa5e4760",
+    "gender": "female",
+    "dob": "2001-02-10",
+    "attempts": 0
+  },
+  "ab@gmail.com": {
+    "first_name": "a",
+    "last_name": "b",
+    "email": "ab@gmail.com",
+    "password": "scrypt:32768:8:1$TtHbR9Ol98X3YKw6$eb660fdc9753c52f6837582b26b91068a32a6cc2f3fb8a399b9845649ec707356b8ee8ec20c296699ce2e92d8734d6f09d5d0ee70f8814befba868d61bc3671c",
+    "gender": "female",
+    "dob": "2001-02-01",
+    "attempts": 0
+  },
+  "emy@gmail.com": {
+    "first_name": "Imane",
+    "last_name": "Elyassine",
+    "email": "emy@gmail.com",
+    "password": "scrypt:32768:8:1$g2Is31244cuB7KSA$a5131a544c512a4384487432f332f5c100f3edebbdc2b5c84d048f92b1a65361098ce1ab93a33421f04781ad80de062dda47dcf1551644cceacb32ad3b00912e",
+    "gender": "female",
+    "dob": "2004-03-12",
+    "attempts": 0
   }
 }

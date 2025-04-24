@@ -1,16 +1,17 @@
+
 {% extends "base.html" %}
 
-{% block title %}Connexion - Cogi{% endblock %}
+{% block title %}Login - Cogi{% endblock %}
 
 {% block content %}
 <div class="containerlogin">
   <div class="form-container fade-in">
     <div class="text-center mb-4">
-      <h2>Connexion</h2>
-      <p class="text-muted">Entrez vos identifiants pour commencer à discuter</p>
+      <h2>Login</h2>
+      <p class="text-muted">Enter your credentials to start chatting</p>
     </div>
 
-    <!-- Affichage des messages d'erreur -->
+    <!-- Display error messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="alert alert-danger" role="alert">
@@ -22,83 +23,78 @@
     {% endwith %}
 
     <form method="POST" class="needs-validation" novalidate>
-      <!-- Champ Nom d'utilisateur -->
+      <!-- Username field -->
       <div class="mb-3">
         <label for="username" class="form-label">Email</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-          <input type="text" id="username" name="username" class="form-control" placeholder="Votre email" required>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Your email" required>
         </div>
       </div>
 
-      <!-- Champ Mot de passe -->
+      <!-- Password field -->
       <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
+        <label for="password" class="form-label">Password</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Mot de passe" required>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         </div>
         <div class="form-check mt-2">
           <input class="form-check-input" type="checkbox" id="showPassword" onclick="togglePassword()">
-          <label class="form-check-label" for="showPassword">Afficher le mot de passe</label>
+          <label class="form-check-label" for="showPassword">Show password</label>
         </div>
       </div>
 
-      <!-- Bouton Connexion -->
+      <!-- Login button -->
       <button type="submit" class="btn btn-success w-100 py-2">
-        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+        <i class="bi bi-box-arrow-in-right"></i> Login
       </button>
 
-      <!-- Lien mot de passe oublié -->
-<div class="text-center mt-3">
-  <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">
-    Mot de passe oublié ?
-  </a>
-</div>
+      <!-- Forgot password link -->
+      <div class="text-center mt-3">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">
+          Forgot password?
+        </a>
+      </div>
 
-<!-- Modal pour la réinitialisation du mot de passe -->
-<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="resetPasswordModalLabel">Réinitialisation du mot de passe</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="/reset-password">
-          <div class="mb-3">
-            <label for="email" class="form-label">Adresse e-mail</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Entrez votre e-mail">
+      <!-- Password reset modal -->
+      <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="resetPasswordModalLabel">Password Reset</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/reset-password">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="d-flex justify-content-between">
+                  <button type="submit" class="btn btn-success">Send reset link</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Envoyer un lien de réinitialisation</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
+
+      <!-- Back to home -->
+      <div class="text-center mt-4">
+        <a href="/" class="text-decoration-none">← Back to homepage</a>
+      </div>
+    </form>
   </div>
 </div>
 
-<script>
-  // Exemple de validation côté client pour l'email
- 
-</script>
-
-
-    <div class="text-center mt-4">
-      <a href="/" class="text-decoration-none">← Retour à l'accueil</a>
-    </div>
-  </div>
-</div>
-
-
+<!-- Registration link -->
 <div class="text-center mt-4">
-  <a href="/register" class="text-decoration-none">Pas encore de compte ? Inscrivez-vous</a>
+  <a href="/register" class="text-decoration-none">Don't have an account? Sign up</a>
 </div>
 
-
-<!-- Script pour validation + afficher mot de passe -->
+<!-- Form validation + toggle password script -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');

@@ -14,33 +14,33 @@ client = OpenAI(
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-app.permanent_session_lifetime = timedelta(minutes=30)  # Expire après 30 min d'inactivité
+app.permanent_session_lifetime = timedelta(minutes=30)  # Expires after 30 minutes of inactivity
 
 USERS_FILE = 'users.json'
 MAX_ATTEMPTS = 5
 
-# Fonction utilitaire : Charger les utilisateurs depuis le fichier JSON
+# Utility function: Load users from JSON file
 def load_users():
     if not os.path.exists(USERS_FILE):
         return {}
     with open(USERS_FILE, 'r') as f:
         return json.load(f)
 
-# Fonction utilitaire : Sauvegarder les utilisateurs dans le fichier JSON
+# Utility function: Save users to JSON file
 def save_users(users):
     with open(USERS_FILE, 'w') as f:
         json.dump(users, f, indent=2)
 
-# Fonction utilitaire pour sauvegarder un nouvel utilisateur
+# Utility function to save a new user
 def save_user(data):
     users = load_users()
 
-    # Vérification si l'email est déjà utilisé
+    # Check if email is already used
     email = data.get("email")
     if email in users:
-        return False  # Email déjà utilisé
+        return False  # Email already exists
 
-    # Ajout du nouvel utilisateur
+    # Add new user
     users[email] = {
         "first_name": data.get("first_name"),
         "last_name": data.get("last_name"),
@@ -52,16 +52,16 @@ def save_user(data):
     }
 
     try:
-        save_users(users)  # Sauvegarde les utilisateurs dans le fichier
+        save_users(users)  # Save users to file
         return True
     except Exception as e:
-        print(f"Erreur lors de la sauvegarde : {e}")
+        print(f"Error while saving: {e}")
         return False
 
-def generate_response(prompt, system_message="Tu es un assistant de soutien psychologique. Reste calme, humain et à l'écoute."):
+def generate_response(prompt, system_message="You are a psychological support assistant. Remain calm, human, and attentive."):
     try:
         response = client.chat.completions.create(
-            model="mistralai/Mistral-7B-Instruct-v0.1",  # ✅ modèle GRATUIT et SERVERLESS
+            model="mistralai/Mistral-7B-Instruct-v0.1",  # ✅ FREE and SERVERLESS model
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt}
@@ -72,10 +72,20 @@ def generate_response(prompt, system_message="Tu es un assistant de soutien psyc
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"Erreur lors de la génération: {e}")
-        return f"Erreur: {str(e)}"
+        print(f"Error during generation: {e}")
+        return f"Error: {str(e)}"
 
-# Route Accueil
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+    message = request.form.get('message')
+    name = request.form.get('name') or "Anonymous"
+
+    # For now we just display it in the console (you can later save it to a database or file)
+    print(f"Feedback received from {name}: {message}")
+
+    return redirect('/')
+
+# Home route
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -84,14 +94,14 @@ def index():
 @app.route('/send_message', methods=["POST"])
 def send_message():
     if "user" not in session:
-        return jsonify({"error": "Non authentifié"}), 401
+        return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
     if not data or "message" not in data:
-        return jsonify({"error": "Message requis"}), 400
+        return jsonify({"error": "Message required"}), 400
     
     user_message = data["message"]
-    system_message = data.get("system_message", "Tu es un assistant de soutien psychologique. Reste calme, humain et à l'écoute.")
+    system_message = data.get("system_message", "You are a psychological support assistant. Remain calm, human, and attentive.")
     
     try:
         response_text = generate_response(user_message, system_message)
@@ -105,7 +115,7 @@ def send_message():
             "error": str(e)
         }), 500
 
-# Route Login sécurisée
+# Secure login route
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -113,29 +123,28 @@ def login():
         password = request.form.get("password")
 
         if not username or not password:
-            flash('Nom d\'utilisateur et mot de passe sont requis !', 'error')
+            flash('Username and password are required!', 'error')
             return redirect(url_for("login"))
 
         users = load_users()
 
         user_data = users.get(username)
         if not user_data:
-            flash("Utilisateur inconnu.", "error")
+            flash("Unknown user.", "error")
             return redirect(url_for("login"))
 
-        # Vérification du nombre d'essais
+        # Check attempt count
         if user_data.get("attempts", 0) >= MAX_ATTEMPTS:
-            flash("Trop de tentatives échouées. Veuillez réessayer plus tard.", "error")
+            flash("Too many failed attempts. Please try again later.", "error")
             return redirect(url_for("login"))
 
-        # Vérification du mot de passe
+        # Check password
         if not check_password_hash(user_data["password"], password):
             users[username]["attempts"] = user_data.get("attempts", 0) + 1
             save_users(users)
-            flash("Nom d'utilisateur ou mot de passe incorrect.", "error")
+            flash("Incorrect username or password.", "error")
             return redirect(url_for("login"))
 
-        # Réinitialisation des tentatives en cas de succès
         users[username]["attempts"] = 0
         save_users(users)
 
@@ -145,29 +154,57 @@ def login():
 
     return render_template("login.html")
 
-# Route réinitialisation du mot de passe
+# Password reset route
 @app.route('/reset-password', methods=["POST"])
 def reset_password():
     email = request.form.get("email")
-    # Logique pour vérifier l'email et envoyer un lien de réinitialisation (par exemple, via un service comme Flask-Mail)
-    flash("Un lien de réinitialisation a été envoyé à votre adresse e-mail.", "success")
+    # Logic to verify email and send reset link (e.g., via Flask-Mail)
+    flash("A reset link has been sent to your email address.", "success")
     return redirect(url_for('login'))
 
-
-# Route Chat
+# Chat route
 @app.route('/chat')
 def chat():
     if "user" not in session:
         return redirect(url_for("login"))
-    return render_template('chat.html', username=session["user"])
 
-# Route Déconnexion
+    users = load_users()
+    email = session["user"]
+
+    if email in users:
+        user_data = users[email]
+        first_name = user_data.get("first_name", "")
+        last_name = user_data.get("last_name", "")
+    else:
+        # Fallback if user not found in JSON
+        first_name = email.split('@')[0]
+        last_name = ""
+    
+    return render_template('chat.html', 
+                          username=email,
+                          first_name=first_name, 
+                          last_name=last_name)
+
+@app.context_processor
+def inject_user_info():
+    if 'user' in session:
+        users = load_users()
+        email = session['user']
+        if email in users:
+            user_data = users[email]
+            return {
+                'first_name': user_data.get('first_name', ''),
+                'last_name': user_data.get('last_name', '')
+            }
+    return {'first_name': '', 'last_name': ''}
+
+# Logout route
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# Route Mission
+# Mission route
 @app.route('/mission')
 def mission():
     return render_template('mission.html')
@@ -184,20 +221,20 @@ def register():
         recaptcha_response = request.form.get('g-recaptcha-response')
 
         if not first_name or not last_name or not email or not password or not gender or not dob or not recaptcha_response:
-            flash("Veuillez remplir tous les champs et valider le CAPTCHA.", "error")
+            flash("Please fill all fields and complete the CAPTCHA.", "error")
             return redirect(url_for("register"))
 
-        # Vérification du CAPTCHA
-        secret_key = "6LfDGRYrAAAAAIE7919oR20thqiKM91YlWvbXMpD"  # Clé secrète de ton reCAPTCHA
+        # CAPTCHA verification
+        secret_key = "6LfDGRYrAAAAAIE7919oR20thqiKM91YlWvbXMpD"  # Your reCAPTCHA secret key
         payload = {'secret': secret_key, 'response': recaptcha_response}
         response = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
         result = response.json()
 
         if not result.get('success'):
-            flash("La vérification CAPTCHA a échoué.", "error")
+            flash("CAPTCHA verification failed.", "error")
             return redirect(url_for("register"))
 
-        # Tentative d'enregistrement
+        # Registration attempt
         success = save_user({
             "first_name": first_name,
             "last_name": last_name,
@@ -208,15 +245,14 @@ def register():
         })
 
         if not success:
-            flash("Cet email est déjà utilisé.", "error")
+            flash("This email is already registered.", "error")
             return redirect(url_for("register"))
 
-        flash("Inscription réussie ! Vous pouvez maintenant vous connecter.", "success")
+        flash("Registration successful! You can now log in.", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html")
 
-
-# Démarrage
+# Startup
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
