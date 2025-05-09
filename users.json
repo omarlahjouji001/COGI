@@ -65,5 +65,14 @@
     "gender": "female",
     "dob": "2004-03-12",
     "attempts": 0
+  },
+  "or.lahjouji@gmail.com": {
+    "first_name": "omar",
+    "last_name": "lahjouji",
+    "email": "or.lahjouji@gmail.com",
+    "password": "scrypt:32768:8:1$aijQmgr0gzkU3qEt$15665022170b30ac1f310cac2bec27d54096a136f92c1eafc3fae9fa23529f812aa0825dfc7fb24e074121c750369716e0042269d82546b5290fc11976c01e4c",
+    "gender": "male",
+    "dob": "2025-05-06",
+    "attempts": 0
   }
 }
