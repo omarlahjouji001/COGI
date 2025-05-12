@@ -8,7 +8,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI(
-    api_key=os.environ["TOGETHER_API_KEY"],
+    api_key=os.environ.get("TOGETHER_API_KEY").strip(),
     base_url="https://api.together.xyz/v1"
 )
 
@@ -58,21 +58,19 @@ def save_user(data):
         print(f"Error while saving: {e}")
         return False
 
-def generate_response(prompt, system_message="You are a psychological support assistant. Remain calm, human, and attentive."):
+def generate_response(prompt, system_message="You are a bilingual (French/Arabic) psychological assistant. Respond in the user's language."):
     try:
         response = client.chat.completions.create(
-            model="mistralai/Mistral-7B-Instruct-v0.1",  # ✅ FREE and SERVERLESS model
+            model="mistralai/Mistral-7B-Instruct-v0.1",
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=200,
-            top_p=0.9
+            max_tokens=200
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"Error during generation: {e}")
         return f"Error: {str(e)}"
 
 @app.route('/submit-feedback', methods=['POST'])
