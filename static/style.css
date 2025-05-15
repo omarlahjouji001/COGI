@@ -3333,3 +3333,38 @@ footer p {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Pour le bouton micro en mode enregistrement */
+#mic-btn.btn-danger {
+  background-color: #dc3545 !important; /* Bootstrap danger red */
+  color: white !important;
+}
+
+/* Animation points pour indicateur "typing" */
+.typing-animation span.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  background-color: #6c757d;
+  border-radius: 50%;
+  animation: blink 1.4s infinite both;
+}
+
+.typing-animation span.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.typing-animation span.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-animation span.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}

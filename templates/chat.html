@@ -3,7 +3,6 @@
 {% block title %}Chat with Cogi{% endblock %}
 
 {% block content %}
-
   
   <div class="chat-container">
     <!-- Message display area -->
@@ -22,12 +21,19 @@
 
     <!-- Message input field -->
     <div class="chat-input glass-card">
-      <form id="message-form" class="input-group">
+      <form id="message-form" class="input-group" autocomplete="off">
         <input type="text" id="user-input" class="form-control" placeholder="Type your message here..." autocomplete="off">
+        
+        <!-- Bouton micro pour speech-to-text -->
+        <button type="button" id="mic-btn" class="btn btn-outline-secondary" title="Start/Stop voice input">
+          <i class="bi bi-mic-fill"></i>
+        </button>
+
         <button type="submit" id="send-btn" class="btn btn-love">
           <i class="bi bi-send-fill"></i> Send
         </button>
       </form>
+
       <div class="chat-suggestions mt-3">
         <span class="tag tag-love suggestionBtn">I feel anxious</span>
         <span class="tag tag-peace suggestionBtn">Breathing techniques</span>
@@ -35,21 +41,65 @@
       </div>
     </div>
   </div>
-</div>
 
 <script>
-  // Message sending function
+  // === Reconnaissance vocale avec Web Speech API ===
+  const micBtn = document.getElementById('mic-btn');
+  const userInput = document.getElementById('user-input');
+
+  // Vérifier la compatibilité
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    micBtn.disabled = true;
+    micBtn.title = "Speech Recognition not supported in this browser";
+  } else {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US'; // changer si besoin, par ex 'fr-FR' pour français
+    recognition.interimResults = true; // afficher le texte en direct
+    recognition.continuous = false; // arrêter après la phrase
+
+    let recognizing = false;
+
+    micBtn.addEventListener('click', () => {
+      if (recognizing) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+
+    recognition.addEventListener('start', () => {
+      recognizing = true;
+      micBtn.classList.add('btn-danger'); // bouton rouge quand enregistrement
+      micBtn.title = "Click to stop recording";
+    });
+
+    recognition.addEventListener('end', () => {
+      recognizing = false;
+      micBtn.classList.remove('btn-danger');
+      micBtn.title = "Start voice input";
+    });
+
+    recognition.addEventListener('result', (event) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        transcript += event.results[i][0].transcript;
+      }
+      userInput.value = transcript;
+    });
+  }
+
+  // === Le reste de ton JS existant pour envoyer les messages ===
+  
   function sendMessage(message = null) {
     const input = document.getElementById("user-input");
     const userMessage = message || input.value.trim();
     
     if (userMessage === "") return; // Prevent sending an empty message
 
-    // Add user's message to the interface
     appendMessage("You", userMessage, true);
-    input.value = ""; // Clear the input field
+    input.value = ""; 
 
-    // Show typing indicator
     const typingIndicator = document.createElement("div");
     typingIndicator.id = "typing-indicator";
     typingIndicator.classList.add("chat-message", "bot-message", "fade-in");
@@ -69,7 +119,6 @@
     document.getElementById("chat-box").appendChild(typingIndicator);
     scrollToBottom();
 
-    // Send message to the server with JSON
     fetch("/send_message", {
       method: "POST",
       headers: {
@@ -82,42 +131,30 @@
       })
     })
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Network error: ' + response.status);
-      }
+      if (!response.ok) throw new Error('Network error: ' + response.status);
       return response.json();
     })
     .then(data => {
-      // Remove typing indicator
       const indicator = document.getElementById("typing-indicator");
       if (indicator) indicator.remove();
-      
-      // Check for error in the response
       if (data.status === "error") {
         appendMessage("Cogi", "Sorry, an error occurred: " + data.error, false);
       } else {
-        // Add bot's response
         appendMessage("Cogi", data.response, false);
       }
     })
     .catch(error => {
       console.error("Error:", error);
-      // Remove typing indicator
       const indicator = document.getElementById("typing-indicator");
       if (indicator) indicator.remove();
-      
-      // Display error message
       appendMessage("Cogi", "Sorry, an error occurred while communicating with the server. Please try again.", false);
     });
   }
 
-  // Function to add a message to the chat
   function appendMessage(sender, message, isUser) {
     const chatBox = document.getElementById("chat-box");
     const msg = document.createElement("div");
     msg.classList.add("chat-message", "fade-in");
-    
-    // Add the appropriate class based on the sender
     if (isUser) {
       msg.classList.add("user-message");
       msg.innerHTML = `
@@ -141,33 +178,29 @@
         </div>
       `;
     }
-    
     chatBox.appendChild(msg);
     scrollToBottom();
   }
 
-  // Function to scroll to the bottom automatically
   function scrollToBottom() {
     const chatBox = document.getElementById("chat-box");
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // Submit event listener for the form
   document.getElementById("message-form").addEventListener("submit", function(event) {
     event.preventDefault();
     sendMessage();
   });
 
-  // Click event listener for suggestion buttons
   document.querySelectorAll(".suggestionBtn").forEach(btn => {
     btn.addEventListener("click", function() {
       sendMessage(this.textContent);
     });
   });
 
-  // Focus the input field when the page loads
   window.onload = function() {
     document.getElementById("user-input").focus();
   };
 </script>
+
 {% endblock %}
