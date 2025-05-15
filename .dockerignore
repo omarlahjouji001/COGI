@@ -1,7 +1,5 @@
-__pycache__
+__pycache__/
 *.pyc
-*.pyo
-*.pyd
-.env
-.git
-.gitignore
+env/
+*.ipynb
+*.sqlite3
