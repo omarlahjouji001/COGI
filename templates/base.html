@@ -1,55 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Cogi - Your Mental Health Companion{% endblock %}</title>
-    <meta name="description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
-    <meta name="author" content="Cogi" />
-    <meta property="og:title" content="Cogi - Your Mental Health Companion" />
-    <meta property="og:description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    
-    <!-- Stylesheets -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
-    {% block extra_head %}{% endblock %}
-  </head>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Cogi - Your Mental Health Companion{% endblock %}</title>
+  <meta name="description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
+  <meta name="author" content="Cogi" />
+  <meta property="og:title" content="Cogi - Your Mental Health Companion" />
+  <meta property="og:description" content="Cogi is your mental health companion, offering support whenever you need to talk to someone, 24/7, in a safe and confidential environment." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo_cogi.png') }}">
 
-  <body>
- <!-- Navigation Menu -->
+
+
+  <!-- Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+  <!-- ===================== FLASH MESSAGES (single source) ===================== -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999; min-width: 300px;">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show shadow" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <script>
+    // Auto–dismiss alerts after 3 s
+    setTimeout(() => {
+      document.querySelectorAll('.alert').forEach(a => {
+        a.style.transition = 'opacity .5s ease';
+        a.style.opacity = '0';
+        setTimeout(() => a.remove(), 500);
+      });
+    }, 3000);
+  </script>
+  <!-- ======================================================================== -->
+
+  <!-- =============================== NAVBAR ================================ -->
+ 
 <nav class="navbar navbar-expand-lg custom-navbar">
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center w-100">
-      <a class="navbar-brand" href="/">
-        Cogi
-      </a>
+      
+     <a class="navbar-brand d-flex align-items-center gap-2" href="/" style="line-height: 1;">
+  <img src="{{ url_for('static', filename='logo_cogi.png') }}" alt="Cogi Logo" width="35" height="35" style="object-fit: contain; margin-top: -2px;">
+  <span style="font-weight: bold; color: #b562d9;">Cogi</span>
+</a>
+
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav gap-4">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mission">Mission</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/chat">Chat</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/mission">Mission</a></li>
+          <li class="nav-item"><a class="nav-link" href="/chat">Chat</a></li>
         </ul>
       </div>
+
       <div class="d-flex align-items-center">
         {% if session.get('user') %}
-          <div class="btn btn-light me-3 rounded-pill" style="cursor: default; background-color: transparent; border: 1px solid #FFFFFF; color: #5e5b5b;">
+          <div class="btn btn-light me-3 rounded-pill" style="cursor: default; background-color: transparent; border: 1px solid #ffffff; color: #5e5b5b;">
             <i class="bi bi-person-circle me-2"></i>
             {% if first_name and last_name %}{{ first_name }} {{ last_name }}{% else %}{{ session.get('user').split('@')[0] }}{% endif %}
           </div>
@@ -58,22 +88,32 @@
           <a href="/login" class="btn btn-outline-light">Log in</a>
         {% endif %}
       </div>
+      
     </div>
   </div>
 </nav>
-    
-    <main>
-      {% block content %}{% endblock %}
-    </main>
-    
-    <footer class="bg-dark text-white text-center py-3">
-      <div class="container">
-        <p>&copy; 2025 Cogi - Your Mental Health Companion</p>
-      </div>
-    </footer>
-    
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-  </body>
+
+  <!-- ======================================================================== -->
+
+  <!-- =============================== CONTENT =============================== -->
+  <main>{% block content %}{% endblock %}</main>
+  <!-- ======================================================================== -->
+
+  <!-- =============================== FOOTER ================================ -->
+  {% if not hide_footer %}
+  <footer class="footer-custom bg-dark text-white mt-auto">
+    <div class="container">
+      <p class="copyright">&copy; 2025 Cogi - Your Mental Health Companion</p>
+    </div>
+  </footer>
+  {% endif %}
+
+  
+  <!-- ======================================================================== -->
+
+  <!-- =============================== SCRIPTS =============================== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <!-- ======================================================================== -->
+</body>
 </html>

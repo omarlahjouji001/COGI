@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Login - Cogi{% endblock %}
@@ -11,17 +10,9 @@
       <p class="text-muted">Enter your credentials to start chatting</p>
     </div>
 
-    <!-- Display error messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="alert alert-danger" role="alert">
-          {% for category, message in messages %}
-            <p class="mb-0">{{ message }}</p>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+   
 
+    <!-- Login form -->
     <form method="POST" class="needs-validation" novalidate>
       <!-- Username field -->
       <div class="mb-3">
@@ -56,36 +47,12 @@
           Forgot password?
         </a>
       </div>
-
-      <!-- Password reset modal -->
-      <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="resetPasswordModalLabel">Password Reset</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form method="POST" action="/reset-password">
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email address</label>
-                  <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email">
-                </div>
-                <div class="d-flex justify-content-between">
-                  <button type="submit" class="btn btn-success">Send reset link</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Back to home -->
-      <div class="text-center mt-4">
-        <a href="/" class="text-decoration-none">← Back to homepage</a>
-      </div>
     </form>
+
+    <!-- Back to home -->
+    <div class="text-center mt-4">
+      <a href="/" class="text-decoration-none">← Back to homepage</a>
+    </div>
   </div>
 </div>
 
@@ -94,22 +61,71 @@
   <a href="/register" class="text-decoration-none">Don't have an account? Sign up</a>
 </div>
 
-<!-- Form validation + toggle password script -->
+<!-- ✅ Password reset modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="resetForm" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resetPasswordModalLabel">Password Reset</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="reset-email" class="form-label">Email address</label>
+          <input type="email" id="reset-email" name="email" class="form-control" placeholder="Enter your email" required>
+          <div id="resetMessage" class="mt-2"></div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">Send reset link</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+ 
+
+
+<!-- JS scripts -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function (event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
+  document.addEventListener("DOMContentLoaded", function () {
+    // Reset modal form handler
+    const resetForm = document.getElementById("resetForm");
+    const resetEmail = document.getElementById("reset-email");
+    const resetMessage = document.getElementById("resetMessage");
+
+    resetForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      resetMessage.innerHTML = "";
+
+      fetch("/reset_request", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `email=${encodeURIComponent(resetEmail.value)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        resetMessage.className = `alert ${data.status === "success" ? "alert-success" : "alert-danger"}`;
+        resetMessage.innerText = data.message;
+
+        if (data.status === "success") {
+          setTimeout(() => {
+            bootstrap.Modal.getInstance(document.getElementById("resetPasswordModal")).hide();
+            resetForm.reset();
+            resetMessage.innerHTML = "";
+          }, 3000);
+        }
+      });
     });
   });
 
+  // ✅ Show/hide password toggle
   function togglePassword() {
-    const pwd = document.getElementById("password");
-    pwd.type = (pwd.type === "password") ? "text" : "password";
+    const passwordInput = document.getElementById("password");
+    if (passwordInput) {
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    }
   }
 </script>
 {% endblock %}

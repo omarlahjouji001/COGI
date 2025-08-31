@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}User Feedback - Cogi{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center mb-4 love-title">💬 More feedbacks from our users</h2>
+
+  {% if feedbacks %}
+    <ul class="list-group">
+      {% for fb in feedbacks %}
+        <li class="list-group-item">
+          <p class="mb-1 fst-italic text-muted">"{{ fb.message }}"</p>
+          <div class="d-flex justify-content-between">
+            <strong>– {{ fb.name }}</strong>
+            <span class="text-secondary small">
+              {{ fb.submitted_at.strftime('%d %B %Y - %H:%M') }}
+            </span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted text-center">No feedback yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

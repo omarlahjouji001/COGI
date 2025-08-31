@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Historique des conversations</h2>
+  <ul>
+    {% for msg in messages %}
+      <li><strong>{{ msg[1].capitalize() }}:</strong> {{ msg[0] }} <em>({{ msg[2] }})</em></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

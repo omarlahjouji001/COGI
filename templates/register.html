@@ -10,8 +10,8 @@
       <h2>Sign Up</h2>
       <p class="text-muted">Create an account to start chatting with Cogi.</p>
     </div>
-    
-    <!-- Display error messages -->
+
+    <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="alert alert-danger" role="alert">
@@ -21,60 +21,94 @@
         </div>
       {% endif %}
     {% endwith %}
-    
+
+    <!-- Registration form -->
     <form method="POST" class="needs-validation" novalidate>
+      <!-- First name -->
       <div class="mb-3">
         <label for="first_name" class="form-label">First Name</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Your first name" required>
+          <input type="text" id="first_name" name="first_name" class="form-control" required>
         </div>
       </div>
 
+      <!-- Last name -->
       <div class="mb-3">
         <label for="last_name" class="form-label">Last Name</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Your last name" required>
+          <input type="text" id="last_name" name="last_name" class="form-control" required>
         </div>
       </div>
 
+      <!-- Email -->
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Your email address" required>
+          <input type="email" id="email" name="email" class="form-control" required>
         </div>
       </div>
 
+      <!-- Password -->
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+          <input type="password" id="password" name="password" class="form-control" required
+            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?':{}|<>]).{8,}"
+            oninput="checkPasswordStrength()">
+        </div>
+        <ul id="password-requirements" class="list-unstyled small text-muted mt-2">
+          <li id="length" class="invalid">❌ At least 8 characters</li>
+          <li id="uppercase" class="invalid">❌ One uppercase letter</li>
+          <li id="number" class="invalid">❌ One number</li>
+          <li id="special" class="invalid">❌ One special character</li>
+        </ul>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        <label for="confirm" class="form-label">Confirm Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" id="confirm" name="confirm" class="form-control" required>
         </div>
       </div>
 
+      <!-- Show password -->
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+        <label class="form-check-label" for="showPassword">Show password</label>
+      </div>
+
+      <!-- Gender -->
       <div class="mb-3">
         <label for="gender" class="form-label">Gender</label>
         <select id="gender" name="gender" class="form-select" required>
           <option value="" disabled selected>Select your gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
-          <option value="other">Other</option>
+
         </select>
       </div>
 
+      <!-- Date of birth -->
       <div class="mb-3">
         <label for="dob" class="form-label">Date of Birth</label>
-        <input type="date" id="dob" name="dob" class="form-control" required>
+        <input type="date" name="dob" id="dob" class="form-control styled-input" required
+          min="{{ (current_date.replace(year=current_date.year - 100)).isoformat() }}"
+          max="{{ (current_date.replace(year=current_date.year - 13)).isoformat() }}">
+        <span id="dob-feedback" class="feedback-message text-danger"></span>
       </div>
 
-      <!-- CAPTCHA -->
+      <!-- reCAPTCHA -->
       <div class="mb-3">
-        <div class="g-recaptcha" data-sitekey="6LfDGRYrAAAAANaStw0Vy73wdeJS5vihjPINhlXa"></div>
+        <div class="g-recaptcha" data-sitekey="6LdeuTgrAAAAALgMB51O8sdVEWPG6TFDGGJvSRpm"></div>
       </div>
 
+      <!-- Submit -->
       <button type="submit" class="btn btn-success w-100 py-2">
         <i class="bi bi-box-arrow-in-right"></i> Sign Up
       </button>
@@ -86,17 +120,119 @@
   </div>
 </div>
 
+<!-- Scripts -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script>
-  // Form validation
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
+  function togglePasswordVisibility() {
+    ["password", "confirm"].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.type = input.type === "password" ? "text" : "password";
+    });
+  }
+
+  function checkPasswordStrength() {
+    const pwd = document.getElementById("password").value;
+    const checks = {
+      length: pwd.length >= 8,
+      uppercase: /[A-Z]/.test(pwd),
+      number: /\d/.test(pwd),
+      special: /[!@#$%^&*(),.?':{}|<>]/.test(pwd),
+    };
+
+    for (const id in checks) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      el.className = checks[id] ? "valid" : "invalid";
+      const label = el.textContent.slice(2);
+      el.textContent = (checks[id] ? "✅ " : "❌ ") + label;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const dobInput = document.getElementById("dob");
+    const feedback = document.getElementById("dob-feedback");
+
+    function validateDOB() {
+      const dobValue = dobInput.value;
+      const today = new Date();
+      const dob = new Date(dobValue);
+      const minAge = 13;
+      const maxAge = 100;
+
+      dobInput.classList.remove("is-valid", "is-invalid");
+      feedback.classList.remove("text-danger", "text-success");
+
+      if (!dobValue) {
+        feedback.textContent = "";
+        return false;
       }
-      form.classList.add('was-validated');
+
+      const age = today.getFullYear() - dob.getFullYear() - (
+        today.getMonth() < dob.getMonth() ||
+        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
+      );
+
+      if (dob > today) {
+        feedback.textContent = "Date of birth cannot be in the future.";
+        dobInput.classList.add("is-valid", "styled-input");
+
+        return false;
+      } else if (age < minAge) {
+        feedback.textContent = "You must be at least 13 years old.";
+        dobInput.classList.add("is-invalid", "styled-input");
+
+        return false;
+      } else if (age > maxAge) {
+        feedback.textContent = "Please enter a realistic date of birth (under 100).";
+        dobInput.classList.add("is-invalid", "styled-input");
+
+        return false;
+      } else {
+        feedback.textContent = "";
+        dobInput.classList.add("is-valid", "styled-input");
+
+        return true;
+      }
+    }
+
+    dobInput.addEventListener("input", validateDOB);
+    form.addEventListener("submit", function (e) {
+      if (!validateDOB()) {
+        e.preventDefault();
+        dobInput.focus();
+      }
     });
   });
 </script>
+
+<style>
+  .valid { color: green; }
+  .invalid { color: red; }
+
+  .styled-input {
+    border: 2px solid rgba(157, 148, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .styled-input.is-valid {
+    border-color: #198754;
+    box-shadow: 0 0 5px rgba(25, 135, 84, 0.5);
+  }
+
+  .styled-input.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+  }
+
+  .feedback-message {
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+</style>
 {% endblock %}

@@ -9,8 +9,7 @@
     <h1>Welcome to <span class="rainbow-text">Cogi</span></h1>
     <p>Your mental health companion, available 24/7. Talk to Cogi whenever you need a safe space for your thoughts and feelings.</p>
     <div class="hero-buttons">
-      <a href="/chat" class="btn btn-lg">Start Chatting Now</a>
-      <a href="/about" class="btn btn-peace">Learn More</a>
+      <a href="/chat" class="btn btn-peace">Start Chatting Now</a>
     </div>
   </div>
 </div>
@@ -114,44 +113,61 @@
   </div>
   
 </div>
-<section class="testimonials">
-  <h2 class="section-title">What Our Users Say</h2>
-  <div class="testimonial-cards">
-    <div class="testimonial">
-      <p class="testimonial-message">"This platform has completely changed how I learn and grow. Highly recommended!"</p>
-      <h4 class="testimonial-name">Sarah L.</h4>
-    </div>
-    <div class="testimonial">
-      <p class="testimonial-message">"A truly intuitive and well-designed interface. It feels like it was made just for me."</p>
-      <h4 class="testimonial-name">Salma T.</h4>
-    </div>
-    <div class="testimonial">
-      <p class="testimonial-message">"Les fonctionnalités sont exactement ce qu’il me fallait. Et le design est top !"</p>
-      <h4 class="testimonial-name">Amina B.</h4>
-    </div>
-   
+
+
+
+<!-- Feedback with backend  -->
+<div class="position-relative my-4" style="max-width: 1000px; margin: auto;">
+  <!-- Flèche gauche -->
+  <button class="btn btn-outline-light position-absolute start-0 top-50 translate-middle-y z-3" onclick="scrollFeedbacks(-1)" style="z-index: 10;">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+
+  <!-- Bloc de feedbacks défilants -->
+  <div id="feedbackContainer" class="d-flex overflow-auto mx-5" style="scroll-behavior: smooth; gap: 20px; padding: 10px;">
+    {% for fb in feedbacks %}
+      <div class="card p-4" style="min-width: 280px; max-width: 300px; flex: 0 0 auto;">
+        <p class="text-muted fst-italic">"{{ fb.message }}"</p>
+        <p class="fw-bold text-end mb-0">– {{ fb.name }}</p>
+        <p class="text-end text-muted" style="font-size: 0.85rem;">
+          {{ fb.submitted_at.strftime('%d %b %Y %H:%M') }}
+        </p>
+      </div>
+    {% endfor %}
   </div>
-</section>
+
+  <!-- Flèche droite -->
+  <button class="btn btn-outline-light position-absolute end-0 top-50 translate-middle-y z-3" onclick="scrollFeedbacks(1)" style="z-index: 10;">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+</div>
+
+
+
+
+
 <div class="feedback-form">
   <h2>Share Your Feedback</h2>
   <p class="feedback-description">We'd love to hear from you! Please write your feedback below 👋</p>
   
-  <form>
+  <form action="/feedback" method="POST">
     <label for="name">Your Name</label>
-    <input type="text" id="name" placeholder="e.g. Sarah">
+    <input type="text" id="name" name="name" placeholder="e.g. Sarah">
     
     <label for="feedback">Your Feedback</label>
-    <textarea id="feedback" placeholder="What do you think about our platform?"></textarea>
+    <textarea id="feedback" name="message" placeholder="What do you think about our platform?"></textarea>
     
     <button type="submit">☮️ Send Feedback</button>
   </form>
 </div>
 
-    
+<div class="text-center mt-4">
+  <a href="/feedback" class="btn btn-outline-peace btn-lg shadow-sm">
+    💬 View  more feedback from users
+  </a>
+</div>
 
-    
-
-
+  
 
 <!-- Newsletter Signup -->
 <div class="container mb-5">
@@ -163,9 +179,9 @@
           <p class="mb-0">Join our newsletter to receive mental wellness tips, updates about Cogi, and helpful resources.</p>
         </div>
         <div class="col-lg-6">
-          <form class="d-flex gap-2 flex-column flex-sm-row">
+          <form action="{{ url_for('subscribe') }}" method="POST" class="d-flex gap-2 flex-column flex-sm-row">
             <div class="flex-grow-1">
-              <input type="email" class="form-control" placeholder="Your email address">
+              <input type="email" name="email" class="form-control" placeholder="Your email address" required>
             </div>
             <div>
               <button type="submit" class="btn btn-love w-100">Subscribe</button>
@@ -176,4 +192,14 @@
     </div>
   </div>
 </div>
+
+<script>
+function scrollFeedbacks(direction) {
+  const container = document.getElementById('feedbackContainer');
+  const scrollAmount = 320;
+  container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+</script>
+
+
 {% endblock %}
